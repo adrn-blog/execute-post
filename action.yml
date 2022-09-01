@@ -1,7 +1,7 @@
 # This is a workflow that is reused in the post repositories to build each post
 # and it doesn't actually get run on this repo.
 name: 'Execute blog post'
-description: 'Sets up and executes each blog post on adrn's blog'
+description: "Sets up and executes each blog post on adrn's blog"
 
 inputs:
   python-version:
