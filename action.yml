@@ -6,7 +6,7 @@ description: "Sets up and executes each blog post on adrn's blog"
 inputs:
   python-version:
     type: string
-    default: "3.10"
+    default: "3.12"
 
 # Any outputs?
 # outputs:
@@ -18,18 +18,18 @@ runs:
   using: "composite"
   steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         clean: false
 
     - name: Setup Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
 
     # Run pre-commit:
     - name: Cache pre-commit environments
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pre-commit
         key: ${{ runner.os }}-pre-commit-${{ hashFiles('**/.pre-commit-config.yaml') }}
@@ -47,7 +47,7 @@ runs:
       shell: bash
       run: echo "python-${{ inputs.python-version }}" > ./runtime.txt
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-deps-${{ hashFiles('**/requirements.in') }}
@@ -62,13 +62,13 @@ runs:
       shell: bash
       run: pip-compile
     - name: Upload requirements.txt
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: requirements
         path: requirements.txt
     - name: Push changes to main
       if: ${{ github.ref == 'refs/heads/main' }}
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.6.4
       with:
         branch: main
         folder: "."
@@ -83,7 +83,7 @@ runs:
         fc-cache -fv
 
     - name: Download the frozen requirements
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: requirements
     - name: Install correct dependencies
@@ -98,14 +98,14 @@ runs:
       shell: bash
       run: jupyter nbconvert --to notebook --output=post.ipynb --execute post.ipynb
     - name: Upload the executed notebook as an artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: executed
         path: post.ipynb
     - name: Push executed notebook to 'executed' branch
       if: ${{ github.ref == 'refs/heads/main' }}
-      uses: JamesIves/github-pages-deploy-action@v4.3.3
+      uses: JamesIves/github-pages-deploy-action@v4.6.4
       with:
         branch: executed
         folder: "."
