@@ -74,12 +74,10 @@ runs:
         folder: "."
 
     # Execute the post notebook:
-    - name: Install Google Fonts
+    - name: Install custom fonts
       shell: bash
       run: |
-        wget -O Old_Standard_TT.zip https://fonts.google.com/download?family=Old%20Standard%20TT
-        unzip -d old_standard_tt/ Old_Standard_TT.zip
-        mv old_standard_tt /usr/share/fonts/
+        cp -R fonts/Old_Standard_TT /usr/share/fonts/
         fc-cache -fv
 
     - name: Download the frozen requirements
