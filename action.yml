@@ -31,6 +31,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - name: Install the project
+      shell: bash
       run: uv sync
 
     # Run pre-commit:
