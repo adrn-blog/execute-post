@@ -3,11 +3,6 @@
 name: 'Execute blog post'
 description: "Sets up and executes each blog post on adrn's blog"
 
-inputs:
-  python-version:
-    description: "Python version to use"
-    default: "3.12"
-
 # Any outputs?
 # outputs:
 #   random-number:
@@ -25,10 +20,13 @@ runs:
     - name: Install uv
       uses: astral-sh/setup-uv@v5
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ inputs.python-version }}
+    - name: Set Python version from runtime.txt if .python-version is missing
+      shell: bash
+      run: |
+        if [ ! -f .python-version ] && [ -f runtime.txt ]; then
+          sed 's/^python-//' runtime.txt > .python-version
+          echo "Created .python-version with contents: $(cat .python-version)"
+        fi
 
     - name: Install the project
       shell: bash
